@@ -23,7 +23,7 @@ class ProductController extends Controller
 
         if(count($products) > 0){
             return response ([
-                'message' => 'Retrieve All Succes';
+                'message' => 'Retrieve All Succes',
                 'data' => $products
             ], 200);
         } // return data semua product dalam bentuk json
@@ -79,7 +79,7 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        $product = Product:find($id); //Mencari data product berdasarkan id
+        $product = Product::find($id); //Mencari data product berdasarkan id
 
         if(!is_null($product)) {
             return response([
@@ -177,7 +177,7 @@ class ProductController extends Controller
 
             if($product->delete()){
                 return response ([
-                    'message' => 'Delete Product Succes'.,
+                    'message' => 'Delete Product Succes',
                     'data' => $product
                 ], 200);
             }
