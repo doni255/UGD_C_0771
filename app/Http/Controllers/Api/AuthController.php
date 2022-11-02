@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facedes\Auth;
+use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Validator;
 use Illuminate\Support\Facedes\Session;
@@ -19,6 +19,8 @@ class AuthController extends Controller
             'name' => 'required|max:60',
             'email' => 'required|email:rfc,dns|unique:users',
             'password' => 'required'
+            'image' => 'required|image:jpeg,png,jpg,gif,svg|max:2048',
+            'username' => 'required|min:6|max:12|regex:/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)/'
          
             
         ]); //rule validasi input saat register
@@ -26,12 +28,12 @@ class AuthController extends Controller
         if($validate->fails()) //Check are the input is match with the rule validation
             return response(['message' => $validate->errors()], 400); //Return validation error input
 
-            // $uploadFolder = 'users';
-            // $image = $request->file('image');
+            $uploadFolder = 'users';
+            $image = $request->file('image');
+            $image_uploaded_path = $image->store($uploadFolder, 'public');
          
 
         $registrationData['password'] = bcrypt($request -> password); //for encrpyt the password
-
         $user = User::create($registrationData); //Create new user
 
         return response([
@@ -65,10 +67,10 @@ class AuthController extends Controller
         ]); //return data user dan token dalam bentuk json
     }
 
-    // public function logoutApi (Request $request){
-    //     $request->user()->token()->revoke();
-    //     return response()->json([
-    //     'message' => 'Successfully logged out'
-    //     ]);
-    // }
+    public function logoutApi (Request $request){
+        $request->user()->token()->revoke();
+        return response()->json([
+        'message' => 'Successfully logged out'
+        ]);
+    }
 }
